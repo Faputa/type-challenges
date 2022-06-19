@@ -1,9 +1,9 @@
 type Constructor<C> =
   C extends { (...args: any): infer T } ? T :
     C extends { new(): infer T } ? T :
-      C extends (infer T)[] ? T extends {} ? Constructor<T> : never : C
-type PropType<P> = P extends { type?: infer T } ? T extends unknown ? any : Constructor<T> : Constructor<P>
-type Props<P> = { [K in keyof P]: Constructor<P[K]> extends { type: infer T } ? PropType<T> : PropType<P[K]> }
+      C extends (infer T)[] ? Constructor<T> : C
+type PropType<P> = {} extends P ? any : Constructor<P>
+type Props<P> = { [K in keyof P]: P[K] extends { type: infer T } ? PropType<T> : PropType<P[K]> }
 type Computed2<C> = { [K in keyof C]: C[K] extends () => infer R ? R : never }
 type Options2<P, D, C, M> = {
   props: P
